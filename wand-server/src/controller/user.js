@@ -23,18 +23,42 @@ module.exports = class extends BaseRest {
          currentPage,
          pageSize,
          all,
+         username,age,user_id
       } = options
 
       let data // 查询的结果
 
       let search = {} // 查询的条件
-      if(all == 1){
-           data =  await this.model('user').where(search).select()
-      }else{    
-          data =  await this.model('user').where(search).page(currentPage,pageSize).countSelect()
+      if(username){
+        // 用户名模糊查
+        search.username = ['like', `%${username}%`]
       }
-   
-
+      if(age){
+          // 年龄精确查
+          search.age = age
+      }
+      if(user_id){
+          search.user_id = user_id
+      }
+    
+      if(all == 1){
+            data =  await this.model('user').where(search).select()
+      }else{    
+            data =  await this.model('user').where(search).page(currentPage,pageSize).countSelect()
+           /*
+              data =   {
+                    errno: 0,
+                    errmsg: "",
+                    data: {
+                        count: 20,  // 共20条
+                        totalPages: 2, // 共2页
+                        pageSize: 10, // 每页10条
+                        currentPage: 1, // 当前第一页
+                        data: [] // 数据
+                        }
+                    }
+              */
+      }
       return this.success(data)
   }
 }

@@ -1,6 +1,6 @@
 const path = require('path');
 const isDev = think.env === 'development';
-
+const access = require('../middleware/access');
 module.exports = [
   {
     handle: 'meta',
@@ -8,6 +8,11 @@ module.exports = [
       logRequest: isDev,
       sendResponseTime: isDev
     }
+  },
+  
+  {
+    handle: access,
+    enable: isDev
   },
   {
     handle: 'resource',
